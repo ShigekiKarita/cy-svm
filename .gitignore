@@ -1,0 +1,13 @@
+*
+!*/
+dev/
+
+!.gitignore
+!*.png
+!*.py
+!*.pyx
+!*.md
+!*.h
+!*.hpp
+!*.cpp
+*_wrap.cpp
