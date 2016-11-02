@@ -22,10 +22,6 @@ void SVM::learning(const vector< vector<double> >& train_set, const vector<doubl
     data_size = train_set[0].size();
     dist = decltype(dist)(-1.0, 1.0);
     
-    // パラメータ設定
-    C = 1000.0;
-    eps = 0.001;
-    tolerance = 0.001;
     // 初期値設定
     fill(a.begin(), a.end(), 0.0);
     fill(err_cache.begin(), err_cache.end(), 0.0);
@@ -337,14 +333,20 @@ double SVM::f(const size_t i)
 double SVM::kernel(const vector<double>& p, const vector<double>& q)
 {
     double r = 0.0;
-    
-    for (size_t i = 0; i < data_size; i++)
+    if (this->is_linear)
     {
-        r += (p[i] - q[i]) * (p[i] - q[i]);
+        for (size_t i = 0; i < data_size; ++i)
+        {
+            r += p[i] * q[i];
+        }
     }
-    
-    r = -r / 2;
-    r = exp(r);
-    
+    else
+    {
+        for (size_t i = 0; i < data_size; i++)
+        {
+            r += (p[i] - q[i]) * (p[i] - q[i]);
+        }
+        r = exp(-r / 2);
+    }
     return r;
 }
