@@ -1,7 +1,7 @@
 #include "svm.h"
 
 #include <cmath>
-#include <iostream>
+// #include <iostream>
 // #include <opencv2/opencv.hpp>
 
 
@@ -52,7 +52,7 @@ void SVM::learning(const vector< vector<double> >& train_set, const vector<doubl
             alldata = true;
         }
         
-        printf("loop %zu : changed %zu\n", loop, changed);
+        // printf("loop %zu : changed %zu\n", loop, changed);
     }
     
     sv_index.reserve(train_set_size);

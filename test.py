@@ -4,7 +4,7 @@ import svm_wrap
 import matplotlib.pyplot as plt
 
 
-class DescionBoundary:
+class DecisionBoundary:
     def __init__(self):
         self.num = 20
         self.dim = 2
@@ -19,20 +19,16 @@ class DescionBoundary:
                                 numpy.arange(y_min, y_max, h))
         return xx, yy, numpy.c_[xx.ravel(), yy.ravel()]
 
-
     def plot(self, model):
         plt.cla()
         xx, yy, xy = self.surface(self.xs)
-        print("predicting surface ...")
         Z = model.predict(xy).reshape(xx.shape)
         eps = 1.0
         a, b = numpy.min(Z) - eps, numpy.max(Z) + eps
         resolution = 1e2
         levels = numpy.arange(a, b, (b - a) / resolution)
         cmap = plt.get_cmap("bwr")
-        print("plotting contour ...")
         plt.contourf(xx, yy, Z, levels, cmap=cmap)
-        print("plotting points ...")
         plt.scatter(self.xs[:, 0], self.xs[:, 1], s=100, c=self.ts, cmap=cmap)
 
     def rands(self):
@@ -46,21 +42,29 @@ class DescionBoundary:
         self.xs = numpy.concatenate([xs0, xs1])
         self.ts = numpy.concatenate([ts0, ts1])
 
-    def test(self, **svm_config):
-        s = svm_wrap.SVMWrapper()
-        s.fit(self.xs, self.ts, eps=1e-3, loop_limit=1e3, **svm_config)
+    def fit(self, model, **config):
+        model.fit(self.xs, self.ts, **config)
+        return model
 
+    def accuracy(self, model):
         success = 0.0
         for x, t in zip(self.xs, self.ts):
-            y = s.predict(x)
+            y = model.predict(x)
             print("expect %f, actual %f" % (t, y))
             if numpy.sign(y) == t:
                 success += 1.0
         success /= len(self.xs)
-
         print("train accuracy: %f" % success)
+        return success
+
+
+    def test(self, **svm_config):
+        s = svm_wrap.SVMWrapper()
+        self.fit(s, eps=1e-3, loop_limit=1e3, **svm_config)
+
+        acc = self.accuracy(s)
         self.plot(s)
-        return success * 100
+        return acc * 100
 
     def main(self):
         # harder margin
@@ -83,9 +87,9 @@ class DescionBoundary:
         a = self.test(c=c, is_linear=False)
         plt.title("RBF (c={:.1e} acc={}%)".format(c, a))
 
-
-        plt.suptitle("Support Vector Machines")
+        plt.suptitle("Support Vector Machines", fontsize=20)
         plt.show()
 
+
 if __name__ == '__main__':
-    DescionBoundary().main()
+    DecisionBoundary().main()
