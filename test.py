@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 
 class DecisionBoundary:
-    def __init__(self):
-        self.num = 20
-        self.dim = 2
+    def __init__(self, num=20, dim=2):
+        self.num = num
+        self.dim = dim
         self.dtype = numpy.float64
         self.generate_dataset()
 

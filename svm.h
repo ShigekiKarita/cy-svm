@@ -10,6 +10,7 @@ class SVM
 public:
     void fit(double* train_set, double* target_set, size_t n, size_t d,
              double c, double eps, size_t loop_limit, bool is_linear) {
+        // FIXME: rename eps to tol??
         this->C = c;
         this->eps = eps;
         this->is_linear = is_linear;
@@ -25,7 +26,7 @@ public:
         this->learning(xs, ys, loop_limit);
     }
 
-    double predict(double* input) {
+    double decision_function(double* input) {
         return this->discriminate(vector<double>(input, input + this->data_size));
     }
 

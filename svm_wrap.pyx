@@ -11,7 +11,8 @@ cdef extern from "svm.h":
     cdef cppclass SVM:
         void fit(double* train_set, double* target_set, size_t n, size_t d,
                  double c, double eps, size_t loop_limit, bool is_linear)
-        double predict(double* input)
+        double decision_function(double* input)
+
 
 cdef class SVMWrapper:
     cdef SVM * _thisptr
@@ -34,7 +35,7 @@ cdef class SVMWrapper:
         return self._fit_impl(xs, ts, len(xs), len(xs[0]), c, eps, loop_limit, is_linear)
 
     def df_one(self, np.ndarray[DOUBLE_t, ndim = 1] test_set):
-        return  self._thisptr.predict(<double *>test_set.data)
+        return  self._thisptr.decision_function(<double *>test_set.data)
 
     def df_batch(self, test_set):
         return np.array([self.df_one(t) for t in test_set])
