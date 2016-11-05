@@ -22,7 +22,7 @@ class DecisionBoundary:
     def plot(self, model):
         plt.cla()
         xx, yy, xy = self.surface(self.xs)
-        Z = model.predict(xy).reshape(xx.shape)
+        Z = model.decision_function(xy).reshape(xx.shape)
         eps = 1.0
         a, b = numpy.min(Z) - eps, numpy.max(Z) + eps
         resolution = 1e2
@@ -48,8 +48,8 @@ class DecisionBoundary:
 
     def accuracy(self, model):
         success = 0.0
-        for x, t in zip(self.xs, self.ts):
-            y = model.predict(x)
+        ys = model.decision_function(self.xs)
+        for y, t in zip(ys, self.ts):
             print("expect %f, actual %f" % (t, y))
             if numpy.sign(y) == t:
                 success += 1.0

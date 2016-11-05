@@ -33,17 +33,17 @@ cdef class SVMWrapper:
     def fit(self, xs, ts, c=1e3, eps=1e-3, loop_limit=1000, is_linear=False):
         return self._fit_impl(xs, ts, len(xs), len(xs[0]), c, eps, loop_limit, is_linear)
 
-    def predict_one(self, np.ndarray[DOUBLE_t, ndim = 1] test_set):
+    def df_one(self, np.ndarray[DOUBLE_t, ndim = 1] test_set):
         return  self._thisptr.predict(<double *>test_set.data)
 
-    def predict_batch(self, test_set):
-        return np.array([self.predict_one(t) for t in test_set])
+    def df_batch(self, test_set):
+        return np.array([self.df_one(t) for t in test_set])
 
-    def predict(self, test_set):
+    def decision_function(self, test_set):
         rank = len(test_set.shape)
         if rank == 1:
-            return self.predict_one(test_set)
+            return self.df_one(test_set)
         elif rank == 2:
-            return self.predict_batch(test_set)
+            return self.df_batch(test_set)
         else:
             raise NotImplementedError("[Error] len(test_set.sshape): %d should be 1 or 2. How about reshape it?" % rank)

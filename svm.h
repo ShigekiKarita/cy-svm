@@ -1,5 +1,6 @@
 #include <vector>
 #include <random>
+#include "xorshift.hpp"
 
 using std::vector;
 
@@ -55,6 +56,7 @@ private:
     double eps = 1e-3;                     // ラグランジュ乗数評価時の余裕値
     double tolerance = 1e-3;               // KKT条件評価時の余裕値
     double Ei, Ej;                  // エラー値
-    std::mt19937_64 rand_engine;
+    // std::mt19937_64 rand_engine;
+    xor128 rand_engine;
     std::uniform_real_distribution<double> dist;
 };
