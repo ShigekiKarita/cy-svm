@@ -4,10 +4,10 @@ a basic example using C++ class in Cython
 
 usage:
 
+
 ```
-$ python setup.py test # plot classification results
+$ python setup.py test
 $ python setup.py build
-timtit: Benchmark().fit_cy()
 timtit: Benchmark(num=100, dim=2).fit_sk()
 > 0.19173218501964584 sec 100 trials
 timtit: Benchmark(num=100, dim=2).fit_cy()
