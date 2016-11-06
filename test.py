@@ -57,7 +57,6 @@ class DecisionBoundary:
         print("train accuracy: %f" % success)
         return success
 
-
     def test(self, **svm_config):
         s = svm_wrap.SVMWrapper()
         self.fit(s, eps=1e-3, loop_limit=1e3, **svm_config)
@@ -72,7 +71,6 @@ class DecisionBoundary:
         plt.subplot(2, 2, 1)
         a = self.test(c=c, is_linear=True)
         plt.title("Linear (c={:.1E} acc={}%)".format(c, a))
-
         plt.subplot(2, 2, 2)
         a = self.test(c=c, is_linear=False)
         plt.title("RBF (c={:.1e} acc={}%)".format(c, a))
@@ -82,11 +80,9 @@ class DecisionBoundary:
         plt.subplot(2, 2, 3)
         a = self.test(c=c, is_linear=True)
         plt.title("Linear (c={:.1e} acc={}%)".format(c, a))
-
         plt.subplot(2, 2, 4)
         a = self.test(c=c, is_linear=False)
         plt.title("RBF (c={:.1e} acc={}%)".format(c, a))
-
         plt.suptitle("Support Vector Machines", fontsize=20)
         plt.show()
 

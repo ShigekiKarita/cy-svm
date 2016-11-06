@@ -4,6 +4,7 @@ import svm_wrap
 
 from sklearn.svm import SVC, LinearSVC
 
+
 class Benchmark:
     def __init__(self, **kwargs):
         self.d = DecisionBoundary(**kwargs)

@@ -1,7 +1,7 @@
 from subprocess import call
 from glob import glob
 
-from numpy.distutils.core import setup, Extension, Command
+from numpy.distutils.core import setup, Extension
 from distutils.command.clean import clean
 from distutils.command.build import build
 from Cython.Build import cythonize
@@ -14,23 +14,13 @@ def python(file):
     call(cmd, shell=True)
 
 
-class Custom(Command):
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-
-class Test(Custom, build):
+class Test(build):
     def run(self):
         build.run(self)
         python("test.py")
 
 
-class Benchmark(Custom, build):
+class Benchmark(build):
     def run(self):
         build.run(self)
         python("benchmark.py")
@@ -53,5 +43,6 @@ setup(
     name="svm_wrap",
     version="1.0.0",
     ext_modules=cythonize([ext]),
-    cmdclass={'clean': Clean, "test": Test, "benchmark": Benchmark}
+    cmdclass={'clean': Clean, "test": Test, "benchmark": Benchmark},
+    requires=['numpy']
 )

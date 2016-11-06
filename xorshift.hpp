@@ -3,10 +3,10 @@
 #include <limits>
 #include <random>
 
-class xor128{
+
+class xor128 {
 public:
     using uint = std::uint32_t;
-    using result_type = uint;
     static constexpr uint min(){ return std::numeric_limits<uint>::min(); }
     static constexpr uint max(){ return std::numeric_limits<uint>::max(); }
     uint operator()(){ return random(); }
