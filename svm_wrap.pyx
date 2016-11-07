@@ -26,25 +26,25 @@ cdef class SVMWrapper:
         if self._thisptr != NULL:
             del self._thisptr
 
-    def _fit_impl(self, np.ndarray[DOUBLE_t, ndim=2] train_set, np.ndarray[DOUBLE_t, ndim=1] target_set,
-                  size_t n, size_t d, double c, double eps, size_t limit, bool is_linear):
-        self._thisptr.fit(<double *>train_set.data, <double *>target_set.data, n, d, c, eps, limit, is_linear)
+    def fit(self, np.ndarray[DOUBLE_t, ndim=2] train_set, np.ndarray[DOUBLE_t, ndim=1] target_set,
+                   double c=1.0, double eps=1e-3, size_t loop_limit=1000, bool is_linear=False):
+        cdef int n = len(train_set)
+        cdef int d = len(train_set[0])
+        self._thisptr.fit(<double *>train_set.data, <double *>target_set.data,
+                          n, d, c, eps, loop_limit, is_linear)
         return self
 
-    def fit(self, xs, ts, c=1e3, eps=1e-3, loop_limit=1000, is_linear=False):
-        return self._fit_impl(xs, ts, len(xs), len(xs[0]), c, eps, loop_limit, is_linear)
-
     def df_one(self, np.ndarray[DOUBLE_t, ndim = 1] test_set):
-        return  self._thisptr.decision_function(<double *>test_set.data)
+        return self._thisptr.decision_function(<double *>test_set.data)
 
     def df_batch(self, test_set):
         return np.array([self.df_one(t) for t in test_set])
 
     def decision_function(self, test_set):
-        rank = len(test_set.shape)
-        if rank == 1:
+        cdef int ndim = np.ndim(test_set)
+        if ndim == 1:
             return self.df_one(test_set)
-        elif rank == 2:
+        elif ndim == 2:
             return self.df_batch(test_set)
         else:
-            raise NotImplementedError("[Error] len(test_set.sshape): %d should be 1 or 2. How about reshape it?" % rank)
+            raise NotImplementedError("[Error] len(test_set.sshape): %d should be 1 or 2. How about reshape it?" % ndim)
